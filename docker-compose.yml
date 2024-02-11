@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  scraper:
+    build: .
+    container_name: scraper
+    volumes:
+      - ./dumps:/app/dumps
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=avto
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+    command: supervisord -c supervisord.conf
+    restart: on-failure
+    
+  postgres:
+    image: postgres
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=avto
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+volumes:
+  pg_data:
+
+
